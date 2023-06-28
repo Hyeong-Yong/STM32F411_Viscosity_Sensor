@@ -30,8 +30,8 @@ void hwInit(void)
   gpioInit();
   spiInit();
   delay(500);
-  adcInit();
-  pwmInit();
+  //adcInit();
+  //pwmInit();
 
 }
 

@@ -47,7 +47,7 @@
 #define _DEF_PWM4	3
 
 #define _DEF_I2C1	0 // DAC :MSP4725
-
+#define _DEF_I2C2	1 //     :INA219
 
 
 #define _DEF_ADC1	0

@@ -20,6 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "adc.h"
 
+
+
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -151,6 +153,3 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
   }
 }
 
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
