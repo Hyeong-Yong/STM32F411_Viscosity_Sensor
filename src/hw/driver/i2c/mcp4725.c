@@ -39,6 +39,7 @@
 
 #include "MCP4725.h"
 
+#ifndef _USE_HW_MCP4725
 
 typedef struct MCP
 {
@@ -632,4 +633,4 @@ void cli_mcp4725(cli_args_t *args)
 #endif
 
 
-
+#endif

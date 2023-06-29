@@ -15,7 +15,9 @@
 #define      HW_LED_MAX_CH       1
 
 #define _USE_HW_SPI
-#define	     HW_SPI_MAX_CH	1
+#define	     HW_SPI_MAX_CH	2
+#define _USE_HW_MAX3165
+
 
 #define _USE_HW_LCD
 #define _USE_HW_ST7735
@@ -53,6 +55,7 @@
 
 #define _USE_HW_I2C
 #define      HW_I2C_MAX_CH	2
+#define _USE_HW_mcp4725
 
 
 #define _USE_HW_FATFS
