@@ -21,14 +21,13 @@
 #include "cli.h"
 #include "button.h"
 #include "gpio.h"
-#include "sd.h"
 #include "fatfs.h"
 #include "spi.h"
 //#include "adc.h"
 #include "i2c.h"
 #include "mcp4725.h"
 //#include "pwm.h"
-
+#include "max31865.h"
 
 void hwInit(void);
 

@@ -39,7 +39,7 @@
 
 #include "MCP4725.h"
 
-#ifndef _USE_HW_MCP4725
+#ifdef _USE_HW_MCP4725
 
 typedef struct MCP
 {
@@ -48,13 +48,13 @@ typedef struct MCP
   MCP4725Ax_ADDRESS i2cAddress;
   float             refVoltage;
   uint16_t          bitsPerVolt;
-} MCP4725;
+} MCP4725_t;
 
-MCP4725 mcp4725;
+MCP4725_t mcp4725;
 
 extern I2C_HandleTypeDef hi2c2;
-static bool mcp4725_writeComand(MCP4725* mcp4725, uint16_t value, MCP4725_COMMAND_TYPE mode, MCP4725_POWER_DOWN_TYPE powerType);
-static uint16_t mcp4725_readRegister(MCP4725* mcp4725, MCP4725_READ_TYPE dataType);
+static bool mcp4725_writeComand(MCP4725_t* mcp4725, uint16_t value, MCP4725_COMMAND_TYPE mode, MCP4725_POWER_DOWN_TYPE powerType);
+static uint16_t mcp4725_readRegister(MCP4725_t* mcp4725, MCP4725_READ_TYPE dataType);
 static uint8_t	mcp4725_getEepromBusyFlag();
 
 
@@ -161,7 +161,7 @@ float mcp4725_getReferenceVoltage(void)
 
 //mcp4725_writeComand(mcp4725, 340, MCP4725_FAST_MODE, MCP4725_POWER_DOWN_OFF)
 /**************************************************************************/
-bool mcp4725_writeComand(MCP4725* mcp4725, uint16_t value, MCP4725_COMMAND_TYPE mode, MCP4725_POWER_DOWN_TYPE powerType)
+bool mcp4725_writeComand(MCP4725_t* mcp4725, uint16_t value, MCP4725_COMMAND_TYPE mode, MCP4725_POWER_DOWN_TYPE powerType)
 {
 	bool ret = false;
 	uint8_t buffer[3];
@@ -222,7 +222,7 @@ bool mcp4725_writeComand(MCP4725* mcp4725, uint16_t value, MCP4725_COMMAND_TYPE 
     - see MCP4725 datasheet on p.20
 */
 /**************************************************************************/
-uint16_t mcp4725_readRegister(MCP4725* mcp4725, MCP4725_READ_TYPE dataType)
+uint16_t mcp4725_readRegister(MCP4725_t* mcp4725, MCP4725_READ_TYPE dataType)
 {
 	uint16_t value = dataType;                             //convert enum to integer to avoid compiler warnings
 	uint16_t ret_val = 0 ;

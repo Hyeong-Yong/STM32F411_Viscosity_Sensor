@@ -9,35 +9,26 @@
 #define SRC_HW_DRIVER_SPI_MAX31865_H_
 
 
-#include <stdbool.h>
-#include <math.h>
+#include "hw_def.h"
 #include "spi.h"
+#include <math.h>
 
-
-#include "gpio.h"
-
+#ifdef _USE_HW_MAX31865
 
 #define _MAX31865_RREF      430.0f
 #define _MAX31865_RNOMINAL  100.0f
 
 //#########################################################################################################################
-typedef struct
-{
-  GPIO_TypeDef      *cs_gpio;
-  uint16_t          cs_pin;
-  SPI_HandleTypeDef *spi;
-  uint8_t           lock;
 
-}Max31865_t;
+
 //#########################################################################################################################
-void  Max31865_init(Max31865_t *max31865,SPI_HandleTypeDef *spi,GPIO_TypeDef  *cs_gpio,uint16_t cs_pin,uint8_t  numwires, uint8_t filterHz);
-bool  Max31865_readTempC(Max31865_t *max31865,float *readTemp);
-bool  Max31865_readTempF(Max31865_t *max31865,float *readTemp);
-float Max31865_Filter(float	newInput, float	lastOutput, float efectiveFactor);
+void  max31865_init();
+bool  max31865_readTempC(float *readTemp);
+bool  max31865_readTempF(float *readTemp);
+float max31865_Filter(float	newInput, float	lastOutput, float efectiveFactor);
 //#########################################################################################################################
 
-
-
+#endif
 
 
 #endif /* SRC_HW_DRIVER_SPI_MAX31865_H_ */

@@ -12,11 +12,13 @@
 #include "bsp.h"
 
 #define _USE_HW_LED
-#define      HW_LED_MAX_CH       1
+#define      HW_LED_MAX_CH      1
 
 #define _USE_HW_SPI
-#define	     HW_SPI_MAX_CH	2
-#define _USE_HW_MAX3165
+#define	     HW_SPI_MAX_CH   	2
+
+#define _USE_HW_MAX31865
+#define _GPIO_MAX31865_CS		4
 
 
 #define _USE_HW_LCD
@@ -44,8 +46,8 @@
 #define _USE_HW_GPIO
 #define      HW_GPIO_MAX_CH	4
 
-#define _USE_HW_SD
-#define _PIN_GPIO_SDCARD_DETECT	0
+//#define _USE_HW_SD
+//#define _PIN_GPIO_SDCARD_DETECT	0
 
 //#define _USE_HW_PWM
 //#define      HW_PWM_MAX_CH	4
@@ -55,9 +57,12 @@
 
 #define _USE_HW_I2C
 #define      HW_I2C_MAX_CH	2
-#define _USE_HW_mcp4725
+#define _USE_HW_MCP4725
 
 
 #define _USE_HW_FATFS
 
 #endif /* SRC_HW_HW_DEF_H_ */
+
+
+

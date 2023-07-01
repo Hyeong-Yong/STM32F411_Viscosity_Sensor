@@ -30,10 +30,18 @@ void spiSetBitWidth(uint8_t ch, uint8_t bit_width);
 uint8_t  spiTransfer8(uint8_t ch, uint8_t data);
 uint16_t spiTransfer16(uint8_t ch, uint16_t data);
 
+
+void spiTx(uint8_t ch, uint8_t *p_buf, uint32_t length);
 void spiDmaTxStart(uint8_t ch, uint8_t *p_buf, uint32_t length);
-void spiDmaTxTransfer(uint8_t ch, void *buf, uint32_t length, uint32_t timeout) ;
+void spiDmaTxTransfer(uint8_t ch, void *buf, uint32_t length, uint32_t timeout);
 bool spiDmaTxIsDone(uint8_t ch);
 void spiAttachTxInterrupt(uint8_t ch, void (*func)());
+
+void spiDmaRxStart(uint8_t ch, uint8_t *p_buf, uint32_t length);
+void spiDmaRxTransfer(uint8_t ch, void *buf, uint32_t length, uint32_t timeout) ;
+bool spiDmaRxIsDone(uint8_t ch);
+void spiAttachRxInterrupt(uint8_t ch, void (*func)());
+
 
 
 #endif

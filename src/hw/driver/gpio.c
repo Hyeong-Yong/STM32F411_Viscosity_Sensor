@@ -9,10 +9,6 @@
 #include "cli.h"
 
 
-#include "gpio.h"
-#include "cli.h"
-
-
 #ifdef _USE_HW_GPIO
 
 typedef struct
@@ -28,10 +24,11 @@ typedef struct
 
 const gpio_tbl_t gpio_tbl[GPIO_MAX_CH] =
     {
-        {GPIOB, GPIO_PIN_9, _DEF_INPUT_PULLUP, GPIO_PIN_RESET, GPIO_PIN_SET,   true},       // 0. SD CD
+        {GPIOB, GPIO_PIN_9, _DEF_INPUT_PULLUP, GPIO_PIN_RESET, GPIO_PIN_SET,   _DEF_HIGH},  // 0. SD CD
         {GPIOA, GPIO_PIN_2, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_LOW},   // 1. LCD BKL
         {GPIOA, GPIO_PIN_3, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_HIGH},  // 2. LCD CS
         {GPIOA, GPIO_PIN_4, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_HIGH},  // 3. LCD DC
+		{GPIOB, GPIO_PIN_0, _DEF_OUTPUT,	   GPIO_PIN_RESET, GPIO_PIN_SET,   _DEF_LOW},   // 4. MAX31865 CS
     };
 
 

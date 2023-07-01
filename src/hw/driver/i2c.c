@@ -75,6 +75,7 @@ bool i2cInit(void)
   return true;
 }
 
+
 bool i2cIsInit(void)
 {
   return is_init;
@@ -457,11 +458,11 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
 	  /* USER CODE BEGIN I2C3_MspInit 1 */
 
 	  /* USER CODE END I2C3_MspInit 1 */
+	  }
 }
 
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 {
-
 	  if(i2cHandle->Instance==I2C2)
 	  {
 	  /* USER CODE BEGIN I2C2_MspDeInit 0 */
@@ -507,7 +508,10 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 }
 
 
+
+
 #ifdef _USE_HW_CLI
+
 void cliI2C(cli_args_t *args)
 {
   bool ret = true;
@@ -605,6 +609,7 @@ void cliI2C(cli_args_t *args)
     ret = false;
   }
 
+
   if (ret == false)
   {
     cliPrintf( "i2c open channel[1~%d]\n", I2C_MAX_CH);
@@ -612,7 +617,11 @@ void cliI2C(cli_args_t *args)
     cliPrintf( "i2c read channel dev_addr reg_addr length\n");
     cliPrintf( "i2c write channel dev_addr reg_addr data\n");
   }
+
 }
+
+
+
 
 #endif
 
