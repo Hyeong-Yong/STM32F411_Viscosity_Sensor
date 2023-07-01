@@ -41,9 +41,8 @@
 
 #ifdef _USE_HW_MCP4725
 
-typedef struct MCP
+typedef struct MCP4725
 {
-	// Privates:
   I2C_HandleTypeDef *hi2c;
   MCP4725Ax_ADDRESS i2cAddress;
   float             refVoltage;

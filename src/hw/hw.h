@@ -27,7 +27,10 @@
 #include "i2c.h"
 #include "mcp4725.h"
 //#include "pwm.h"
+#include "ina219.h"
+
 #include "max31865.h"
+
 
 void hwInit(void);
 

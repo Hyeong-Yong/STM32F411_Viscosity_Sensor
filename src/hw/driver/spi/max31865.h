@@ -10,13 +10,14 @@
 
 
 #include "hw_def.h"
-#include "spi.h"
 #include <math.h>
 
 #ifdef _USE_HW_MAX31865
 
-#define _MAX31865_RREF      430.0f
-#define _MAX31865_RNOMINAL  100.0f
+
+
+#define MAX31865_RREF      430.0f
+#define MAX31865_RNOMINAL  100.0f
 
 //#########################################################################################################################
 

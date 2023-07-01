@@ -17,14 +17,15 @@ void hwInit(void)
   uartInit();
   buttonInit();
   i2cInit();
-  mcp4725_init();
 
   gpioInit();
   spiInit();
   delay(500);
   //adcInit();
   //pwmInit();
-
+  mcp4725_init();
+  max31865_init();
+  ina219_init();
 }
 
 

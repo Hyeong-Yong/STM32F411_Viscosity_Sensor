@@ -6,8 +6,7 @@
  */
 
 #include "max31865.h"
-
-
+#include "spi.h"
 #include "gpio.h"
 
 #ifdef _USE_HW_MAX31865
@@ -60,10 +59,9 @@
 #define MAX31865_CONFIG_FAULTSTAT       0x02
 #define MAX31865_CONFIG_3WIRE           0x10
 #define MAX31865_CONFIG_1SHOT           0x20
-#define MAX31865_CONFIG_AUTO       	    0x40
-#define MAX31865_CONFIG_BIAS            0x80
+#define MAX31865_CONFIG_AUTO    	    0x40
+#define MAX31865_CONFIG_BIAS	        0x80
 
-#define MAX31865_CONFIG_AUTO_OFF        0x00
 #define MAX31865_CONFIG_24WIRE          0x00
 
 #define MAX31865_FAULT_HIGHTHRESH       0x80
@@ -80,10 +78,9 @@
 #define _SPI_MAX31865_CH	_DEF_SPI2
 
 static uint8_t* max31865_readRegisterN(uint8_t addr, uint8_t n);
-static void max31865_delay(uint32_t delay_ms);
-static uint8_t max31865_readRegister8(uint8_t addr);
+static uint8_t  max31865_readRegister8(uint8_t addr);
 static uint16_t max31865_readRegister16(uint8_t addr);
-static uint8_t max31865_readFault();
+static uint8_t  max31865_readFault();
 static void max31865_clearFault();
 static void max31865_enableBias(uint8_t enable);
 static void max31865_autoConvert(uint8_t enable);
@@ -95,12 +92,9 @@ typedef struct
 {
   SPI_HandleTypeDef *spi;
   uint8_t           lock;
-  uint8_t			numwires;
-  uint8_t			filterHz;
 }MAX31865_t;
 
-bool        pt100isOK;
-float       pt100Temp;
+
 MAX31865_t  pt100;
 
 
@@ -119,30 +113,19 @@ void max31865_init() //uint8_t  numwires, uint8_t filterHz
 // 딜레이
   delay(100);
 
-// SET WIRE
-  max31865_setWires(3);
-  max31865_enableBias(0);
-  max31865_autoConvert(0);
+// Setting configuration
+  max31865_setWires(MAX31865_CONFIG_3WIRE);
+  max31865_enableBias(MAX31865_CONFIG_BIAS);
+  max31865_autoConvert(MAX31865_CONFIG_AUTO);
   max31865_clearFault();
-  max31865_setFilter(50);
+  max31865_setFilter(MAX31865_CONFIG_FILT60HZ);
 }
 
-
-
-void MAX31865_Init(){
-	return;
-}
-
-
-void max31865_delay(uint32_t delay_ms)
-{
-  HAL_Delay(delay_ms);
-}
 
 uint8_t* max31865_readRegisterN(uint8_t addr, uint8_t n)
 {
-	uint8_t tmp = 0xFF;
-	addr &= 0x7F;
+	uint8_t dummy = 0xFF;
+	addr &= 0x7F; ////[A7]=0 (0111 1111) : read
 
 	uint8_t *ret_buf ={0};
 	uint8_t i=0;
@@ -152,7 +135,7 @@ uint8_t* max31865_readRegisterN(uint8_t addr, uint8_t n)
 
 	while (n--)
 	{
-		ret_buf[i] = spiTransfer8(_SPI_MAX31865_CH, tmp);
+		ret_buf[i] = spiTransfer8(_SPI_MAX31865_CH, dummy);
 		i++;
 	}
 	gpioPinWrite(_GPIO_MAX31865_CS, _DEF_HIGH);
@@ -183,7 +166,7 @@ uint16_t max31865_readRegister16(uint8_t addr)
 void max31865_writeRegister8(uint8_t addr, uint8_t data)
 {
 	gpioPinWrite(_SPI_MAX31865_CH, _DEF_HIGH);
-	addr |= 0x80;
+	addr |= 0x80; //[A7]=1 (1000 0000) : write
 	spiTx(_SPI_MAX31865_CH, &addr, 1);
 	spiTx(_SPI_MAX31865_CH, &data, 1);
 	gpioPinWrite(_SPI_MAX31865_CH, _DEF_LOW);
@@ -215,7 +198,7 @@ void max31865_enableBias(uint8_t enable)
 void max31865_autoConvert(uint8_t enable)
 {
 	uint8_t t = max31865_readRegister8(MAX31865_CONFIG_READ);
-	if (enable)
+	if (MAX31865_CONFIG_AUTO)
 		t |= MAX31865_CONFIG_AUTO;
 	else
 		t &= ~MAX31865_CONFIG_AUTO;
@@ -225,7 +208,7 @@ void max31865_autoConvert(uint8_t enable)
 void max31865_setWires(uint8_t numWires)
 {
 	uint8_t t = max31865_readRegister8(MAX31865_CONFIG_READ);
-	if (numWires == 3)
+	if (numWires == MAX31865_CONFIG_3WIRE)
 		t |= MAX31865_CONFIG_3WIRE;
 	else
 		t &= ~MAX31865_CONFIG_3WIRE;
@@ -235,7 +218,7 @@ void max31865_setWires(uint8_t numWires)
 void max31865_setFilter(uint8_t filterHz)
 {
 	uint8_t t = max31865_readRegister8(MAX31865_CONFIG_READ);
-	if (filterHz == 50)
+	if (filterHz == MAX31865_CONFIG_FILT50HZ)
 		t |= MAX31865_CONFIG_FILT50HZ;
 	else
 		t &= ~MAX31865_CONFIG_FILT50HZ;
@@ -246,31 +229,31 @@ uint16_t max31865_readRTD()
 {
 	max31865_clearFault();
 	max31865_enableBias(1);
-	max31865_delay(10);
+	delay(10);
 	uint8_t t = max31865_readRegister8(MAX31865_CONFIG_READ);
 	t |= MAX31865_CONFIG_1SHOT;
 	max31865_writeRegister8(MAX31865_CONFIG_READ, t);
-	max31865_delay(65);
+	delay(65);
 	uint16_t rtd = max31865_readRegister16(MAX31865_RTDMSB_READ);
 	rtd >>= 1;
 	return rtd;
 }
 
 
-
 bool max31865_readTempC(float *readTemp)
 {
   if(pt100.lock == 1)
-    max31865_delay(1);
+    {delay(1);}
   pt100.lock = 1;
   bool isOk = false;
+
   float Z1, Z2, Z3, Z4, Rt, temp;
 	Rt = max31865_readRTD();
 	Rt /= 32768;
-	Rt *= _MAX31865_RREF;
+	Rt *= MAX31865_RREF;
 	Z1 = -RTD_A;
 	Z2 = RTD_A * RTD_A - (4 * RTD_B);
-	Z3 = (4 * RTD_B) / _MAX31865_RNOMINAL;
+	Z3 = (4 * RTD_B) / MAX31865_RNOMINAL;
 	Z4 = 2 * RTD_B;
 	temp = Z2 + (Z3 * Rt);
 	temp = (sqrtf(temp) + Z1) / Z4;
@@ -283,7 +266,7 @@ bool max31865_readTempC(float *readTemp)
     pt100.lock = 0;
     return isOk;
   }
-	Rt /= _MAX31865_RNOMINAL;
+	Rt /= MAX31865_RNOMINAL;
 	Rt *= 100;
 	float rpoly = Rt;
 	temp = -242.02;
