@@ -60,7 +60,7 @@ static uint8_t	mcp4725_getEepromBusyFlag();
 static bool is_init = false;
 const uint8_t i2c_ch = _DEF_I2C1; //channel 0: _DEF_I2C2;
 
-bool mcp4725_init(void){
+bool MCP4725_Init(void){
 	bool ret = true;
 
 	mcp4725.hi2c = &hi2c2;

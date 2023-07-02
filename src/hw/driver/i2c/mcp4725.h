@@ -83,7 +83,7 @@ MCP4725_READ_TYPE;
 
 
 // Publics:
-bool 	mcp4725_init();
+bool 	MCP4725_Init();
 bool 	mcp4725_isConnected(void);
 bool 	mcp4725_IsInit(void);
 

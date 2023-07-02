@@ -18,7 +18,7 @@
 #define	     HW_SPI_MAX_CH   	2
 
 #define _USE_HW_MAX31865
-#define _GPIO_MAX31865_CS		4
+#define 	_GPIO_MAX31865_CS		4
 
 
 #define _USE_HW_LCD
@@ -44,7 +44,7 @@
 #define      HW_CLI_LINE_BUF_MAX	32
 
 #define _USE_HW_GPIO
-#define      HW_GPIO_MAX_CH	4
+#define      HW_GPIO_MAX_CH	5
 
 //#define _USE_HW_SD
 //#define _PIN_GPIO_SDCARD_DETECT	0

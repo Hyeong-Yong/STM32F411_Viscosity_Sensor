@@ -8,7 +8,7 @@
 #ifndef SRC_HW_DRIVER_I2C_INA219_H_
 #define SRC_HW_DRIVER_I2C_INA219_H_
 
-#include "hw.h"
+#include "hw_def.h"
 #include "cli.h"
 
 /*!
@@ -24,24 +24,23 @@ typedef enum
 } INA219_ADDRESS;
 
 
-const uint8_t READ = 0x01;
 
 //REGISTER
-#define REG_CONFIG         0x00 // Config register address
-#define REG_SHUNTVOLTAGE   0x01 //shunt voltage register
-#define REG_BUSVOLTAGE     0x02 //bus voltage register
-#define REG_POWER          0x03 // power register
-#define REG_CURRENT        0x04 //current register
-#define REG_CALIBRATION    0x05 //calibration register
+#define INA219_REG_CONFIG         0x00 // Config register address
+#define INA219_REG_SHUNTVOLTAGE   0x01 //shunt voltage register
+#define INA219_REG_BUSVOLTAGE     0x02 //bus voltage register
+#define INA219_REG_POWER          0x03 // power register
+#define INA219_REG_CURRENT        0x04 //current register
+#define INA219_REG_CALIBRATION    0x05 //calibration register
 //
-#define CONFIG_RESET       0x8000  // Reset Bit
+#define INA219_CONFIG_RESET       0x8000  // Reset Bit
 //
-#define	CONFIG_BVOLTAGERANGE_16V 0x0000  // 0-16V Range
-#define	CONFIG_BVOLTAGERANGE_32V 0x2000  // 0-32V Range
+#define	INA219_CONFIG_BVOLTAGERANGE_16V 0x0000  // 0-16V Range
+#define	INA219_CONFIG_BVOLTAGERANGE_32V 0x2000  // 0-32V Range
 //
 #define	INA219_CONFIG_GAIN_1_40MV				(0x0000)  // Gain 1, 40mV Range
 #define	INA219_CONFIG_GAIN_2_80MV				(0x0800)  // Gain 2, 80mV Range
-#define	NA219_CONFIG_GAIN_4_160MV				(0x1000) // Gain 4, 160mV Range
+#define	INA219_CONFIG_GAIN_4_160MV				(0x1000) // Gain 4, 160mV Range
 #define	INA219_CONFIG_GAIN_8_320MV				(0x1800) // Gain 8, 320mV Range
 
 #define	INA219_CONFIG_BADCRES_9BIT				(0x0000)  // 9-bit bus res = 0..511
@@ -83,17 +82,11 @@ const uint8_t READ = 0x01;
 	@brief  functions for interacting with INA219 current/power monitor IC
 **************************************************************************/
 
-typedef struct INA219
-{
-	I2C_HandleTypeDef *hi2c;
-	INA219_ADDRESS	  i2cAddress;
-} INA219_t;
 
-uint16_t ina219_calibrationValue;
-int16_t ina219_currentDivider_mA;
-int16_t ina219_powerMultiplier_mW;
 
-void ina219_init();
+
+void INA219_Init();
+uint8_t INA219_isConnected();
 uint16_t INA219_ReadBusVoltage();
 int16_t INA219_ReadCurrent();
 int16_t INA219_ReadCurrent_raw();

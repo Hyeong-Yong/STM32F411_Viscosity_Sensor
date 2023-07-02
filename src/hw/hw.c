@@ -23,9 +23,9 @@ void hwInit(void)
   delay(500);
   //adcInit();
   //pwmInit();
-  mcp4725_init();
+  MCP4725_Init();
   max31865_init();
-  ina219_init();
+  INA219_Init();
 }
 
 
