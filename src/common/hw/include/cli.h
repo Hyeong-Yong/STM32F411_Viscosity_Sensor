@@ -1,13 +1,12 @@
 /*
  * cli.h
  *
- *  Created on: 2022. 3. 1.
- *      Author: HYJH
+ *  Created on: 2020. 12. 19.
+ *      Author: baram
  */
 
 #ifndef SRC_COMMON_HW_INCLUDE_CLI_H_
 #define SRC_COMMON_HW_INCLUDE_CLI_H_
-
 
 #include "hw_def.h"
 
@@ -42,10 +41,9 @@ bool cliMain(void);
 void cliPrintf(const char *fmt, ...);
 bool cliAdd(const char *cmd_str, void (*p_func)(cli_args_t *));
 bool cliKeepLoop(void);
-uint32_t cliAvailable(void);
-uint8_t  cliRead(void);
-uint32_t cliWrite(uint8_t *p_data, uint32_t length);
+
 
 #endif
+
 
 #endif /* SRC_COMMON_HW_INCLUDE_CLI_H_ */

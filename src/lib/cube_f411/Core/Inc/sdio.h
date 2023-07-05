@@ -1,28 +1,26 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    sdio.h
-  * @brief   This file contains all the function prototypes for
-  *          the sdio.c file
+  * File Name          : SDIO.h
+  * Description        : This file provides code for the configuration
+  *                      of the SDIO instances.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SDIO_H__
-#define __SDIO_H__
-
+#ifndef __sdio_H
+#define __sdio_H
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -47,6 +45,14 @@ void MX_SDIO_SD_Init(void);
 #ifdef __cplusplus
 }
 #endif
+#endif /*__ sdio_H */
 
-#endif /* __SDIO_H__ */
+/**
+  * @}
+  */
 
+/**
+  * @}
+  */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

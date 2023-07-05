@@ -1,30 +1,24 @@
 /*
  * cdc.c
  *
- *  Created on: 2022. 1. 3.
- *      Author: HYJH
+ *  Created on: 2020. 12. 11.
+ *      Author: baram
  */
+
 
 #include "cdc.h"
 
+
 #ifdef _USE_HW_CDC
 
-static bool is_init = false;
 
 bool cdcInit(void)
 {
-  bool ret =true;
+  bool ret = true;
 
-  is_init = true;
 
   return ret;
 }
 
-bool cdcIsInit()
-{
-  return is_init;
-}
 
 #endif
-
-//cdc function은 usbd_cdc_if.c 에 있음.

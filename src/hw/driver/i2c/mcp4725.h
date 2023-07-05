@@ -8,6 +8,7 @@
 #ifndef SRC_HW_DRIVER_DAC_MCP4725_H_
 #define SRC_HW_DRIVER_DAC_MCP4725_H_
 
+#include <stdbool.h>
 #include "i2c.h"
 #include "cli.h"
 

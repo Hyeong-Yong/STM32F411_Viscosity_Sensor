@@ -1,41 +1,56 @@
 /*
  * bsp.c
  *
- *  Created on: Dec 31, 2021
- *      Author: HYJH
+ *  Created on: Dec 6, 2020
+ *      Author: baram
  */
 
+
 #include "bsp.h"
-//#include "uart.h"
+#include "uart.h"
+
+
 
 void SystemClock_Config(void);
+
 
 void bspInit(void)
 {
   HAL_Init();
   SystemClock_Config();
 
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
-
 }
 
 void delay(uint32_t ms)
 {
- HAL_Delay(ms);
+#ifdef _USE_HW_RTOS
+  if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+  {
+    osDelay(ms);
+  }
+  else
+  {
+    HAL_Delay(ms);
+  }
+#else
+  HAL_Delay(ms);
+#endif
 }
 
 uint32_t millis(void)
 {
-return HAL_GetTick();
-
+  return HAL_GetTick();
 }
 
 int __io_putchar(int ch)
 {
-  //USB로 printf 캐릭터 전송
-//  uartWrite(_DEF_UART1, (uint8_t *)&ch, 1);
+  //uartWrite(_DEF_UART2, (uint8_t *)&ch, 1);
   return 1;
 }
+
+
 
 void SystemClock_Config(void)
 {
@@ -76,6 +91,7 @@ void SystemClock_Config(void)
   }
 }
 
+
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
@@ -88,9 +104,6 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+
   /* USER CODE END Error_Handler_Debug */
 }

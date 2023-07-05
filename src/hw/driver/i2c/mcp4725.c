@@ -37,8 +37,9 @@
 
 
 
-#include "MCP4725.h"
+#include "mcp4725.h"
 
+#ifdef _USE_HW_MCP4725
 
 typedef struct MCP
 {
@@ -68,6 +69,12 @@ bool mcp4725_init(void){
 	mcp4725.refVoltage = 5.0;
 	mcp4725_setReferenceVoltage(mcp4725.refVoltage); //set _refVoltage & _bitsPerVolt variables
 	is_init = true;
+
+	uint8_t mcp4725_isReady = i2cIsDeviceReady(i2c_ch, mcp4725.i2cAddress);
+	if(mcp4725_isReady == HAL_OK)
+		{
+			ret = false;
+		}
 
 	#ifdef _USE_HW_CLI
 		cliAdd("mcp4725", cli_mcp4725);
@@ -632,4 +639,4 @@ void cli_mcp4725(cli_args_t *args)
 #endif
 
 
-
+#endif

@@ -1,25 +1,33 @@
 /*
  * rtc.c
  *
- *  Created on: 2022. 1. 3.
- *      Author: HYJH
+ *  Created on: 2020. 12. 9.
+ *      Author: baram
  */
 
+
 #include "rtc.h"
-//Backup Register 활성하시켜줘서 Reset button 누를 시 데이터를 BackupRegister에 저장
+
 
 
 #ifdef _USE_HW_RTC
 
+
 static RTC_HandleTypeDef hrtc;
+
+
 
 bool rtcInit(void)
 {
-  bool ret=true;
+  bool ret = true;
+
+
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  hrtc.Instance = RTC;
-  hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
-  hrtc.Init.OutPut = RTC_OUTPUTSOURCE_ALARM;
+
+
+  hrtc.Instance           = RTC;
+  hrtc.Init.AsynchPrediv  = RTC_AUTO_1_SECOND;
+  hrtc.Init.OutPut        = RTC_OUTPUTSOURCE_ALARM;
   if (HAL_RTC_Init(&hrtc) != HAL_OK)
   {
     Error_Handler();
@@ -28,18 +36,16 @@ bool rtcInit(void)
   return ret;
 }
 
+uint32_t rtcBackupRegRead(uint32_t index)
+{
+  return HAL_RTCEx_BKUPRead(&hrtc, index);
+}
+
 void rtcBackupRegWrite(uint32_t index, uint32_t data)
 {
   HAL_RTCEx_BKUPWrite(&hrtc, index, data);
 }
 
-
-uint32_t rtcBackupRegRead(uint32_t index)
-{
-  uint32_t ret;
-  ret = HAL_RTCEx_BKUPRead(&hrtc, index);
-  return ret;
-}
 
 
 

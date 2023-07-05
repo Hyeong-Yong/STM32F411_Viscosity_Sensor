@@ -6,12 +6,13 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -55,11 +56,6 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern I2C_HandleTypeDef hi2c2;
-extern DMA_HandleTypeDef hdma_spi4_tx;
-extern SPI_HandleTypeDef hspi4;
-extern DMA_HandleTypeDef hdma_usart1_rx;
-extern UART_HandleTypeDef huart1;
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 /* USER CODE BEGIN EV */
 
@@ -77,9 +73,7 @@ void NMI_Handler(void)
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-  while (1)
-  {
-  }
+
   /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
@@ -204,62 +198,6 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles I2C2 error interrupt.
-  */
-void I2C2_ER_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C2_ER_IRQn 0 */
-
-  /* USER CODE END I2C2_ER_IRQn 0 */
-  HAL_I2C_ER_IRQHandler(&hi2c2);
-  /* USER CODE BEGIN I2C2_ER_IRQn 1 */
-
-  /* USER CODE END I2C2_ER_IRQn 1 */
-}
-
-/**
-  * @brief This function handles USART1 global interrupt.
-  */
-void USART1_IRQHandler(void)
-{
-  /* USER CODE BEGIN USART1_IRQn 0 */
-
-  /* USER CODE END USART1_IRQn 0 */
-  HAL_UART_IRQHandler(&huart1);
-  /* USER CODE BEGIN USART1_IRQn 1 */
-
-  /* USER CODE END USART1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles DMA2 stream1 global interrupt.
-  */
-void DMA2_Stream1_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA2_Stream1_IRQn 0 */
-
-  /* USER CODE END DMA2_Stream1_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_spi4_tx);
-  /* USER CODE BEGIN DMA2_Stream1_IRQn 1 */
-
-  /* USER CODE END DMA2_Stream1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles DMA2 stream2 global interrupt.
-  */
-void DMA2_Stream2_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
-
-  /* USER CODE END DMA2_Stream2_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart1_rx);
-  /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
-
-  /* USER CODE END DMA2_Stream2_IRQn 1 */
-}
-
-/**
   * @brief This function handles USB On The Go FS global interrupt.
   */
 void OTG_FS_IRQHandler(void)
@@ -271,20 +209,6 @@ void OTG_FS_IRQHandler(void)
   /* USER CODE BEGIN OTG_FS_IRQn 1 */
 
   /* USER CODE END OTG_FS_IRQn 1 */
-}
-
-/**
-  * @brief This function handles SPI4 global interrupt.
-  */
-void SPI4_IRQHandler(void)
-{
-  /* USER CODE BEGIN SPI4_IRQn 0 */
-
-  /* USER CODE END SPI4_IRQn 0 */
-  HAL_SPI_IRQHandler(&hspi4);
-  /* USER CODE BEGIN SPI4_IRQn 1 */
-
-  /* USER CODE END SPI4_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

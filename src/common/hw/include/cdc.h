@@ -1,23 +1,27 @@
 /*
  * cdc.h
  *
- *  Created on: 2022. 1. 3.
- *      Author: HYJH
+ *  Created on: 2020. 12. 11.
+ *      Author: baram
  */
-
-#include "hw_def.h"
 
 #ifndef SRC_COMMON_HW_INCLUDE_CDC_H_
 #define SRC_COMMON_HW_INCLUDE_CDC_H_
 
+
+#include "hw_def.h"
+
+
 #ifdef _USE_HW_CDC
+
+
 bool     cdcInit(void);
-bool	 cdcIsInit(void);
-uint32_t cdcAvailable(void);//ring buffer
+uint32_t cdcAvailable(void);
 uint8_t  cdcRead(void);
-uint8_t  cdcDataIn(uint8_t rx_data);
-uint8_t  cdcWrite(uint8_t *p_data, uint32_t length);
+void     cdcDataIn(uint8_t rx_data);
+uint32_t cdcWrite(uint8_t *p_data, uint32_t length);
 uint32_t cdcGetBaud(void);
+
 
 #endif
 

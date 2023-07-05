@@ -1,19 +1,16 @@
 /*
  * gpio.c
  *
- *  Created on: 2022. 3. 4.
- *      Author: HYJH
+ *  Created on: 2020. 12. 24.
+ *      Author: baram
  */
 
-#include "gpio.h"
-#include "cli.h"
-
 
 #include "gpio.h"
 #include "cli.h"
 
 
-#ifdef _USE_HW_GPIO
+
 
 typedef struct
 {
@@ -28,10 +25,7 @@ typedef struct
 
 const gpio_tbl_t gpio_tbl[GPIO_MAX_CH] =
     {
-        {GPIOB, GPIO_PIN_9, _DEF_INPUT_PULLUP, GPIO_PIN_RESET, GPIO_PIN_SET,   true},       // 0. SD CD
-        {GPIOA, GPIO_PIN_2, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_LOW},   // 1. LCD BKL
-        {GPIOA, GPIO_PIN_3, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_HIGH},  // 2. LCD CS
-        {GPIOA, GPIO_PIN_4, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_HIGH},  // 3. LCD DC
+        {GPIOB, GPIO_PIN_9, _DEF_INPUT_PULLUP, GPIO_PIN_RESET, GPIO_PIN_SET, true}, // 0. SD CD
     };
 
 
@@ -47,7 +41,6 @@ bool gpioInit(void)
   bool ret = true;
 
 
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   for (int i=0; i<GPIO_MAX_CH; i++)
@@ -217,6 +210,4 @@ void cliGpio(cli_args_t *args)
     cliPrintf("gpio write ch[0~%d] 0:1\n", GPIO_MAX_CH-1);
   }
 }
-#endif
-
 #endif
