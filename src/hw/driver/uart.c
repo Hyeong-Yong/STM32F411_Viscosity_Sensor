@@ -68,9 +68,9 @@ bool uartOpen(uint8_t ch, uint32_t baud)
 
       qbufferCreate(&qbuffer[ch], &rx_buf[0], 256);
 
-      __HAL_RCC_DMA1_CLK_ENABLE();
-      //HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
-      //HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+      __HAL_RCC_DMA2_CLK_ENABLE();
+      HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+      HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 
 
       if (HAL_UART_Init(&huart1) != HAL_OK)

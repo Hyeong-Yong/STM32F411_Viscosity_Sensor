@@ -19,7 +19,7 @@ void hwInit(void)
   cliInit();
   ledInit();
   usbInit();
-//  uartInit();
+  uartInit();
   buttonInit();
   gpioInit();
   i2cInit();
