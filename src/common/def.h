@@ -45,6 +45,11 @@
 #define _DEF_I2C1	0 // DAC :MSP4725
 #define _DEF_I2C2	1 // INA219
 
+#define _DEF_SPI1	0 // MAX31865
+
+#define _DEF_GPIO1	0
+#define _DEF_GPIO2	1  //SPI_MAX31865_CS
+
 
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 

@@ -21,8 +21,11 @@
 #include "cli.h"
 #include "button.h"
 #include "gpio.h"
+#include "i2c.h"
 #include "mcp4725.h"
 #include "ina219.h"
+#include "spi.h"
+#include "max31865.h"
 
 void hwInit(void);
 

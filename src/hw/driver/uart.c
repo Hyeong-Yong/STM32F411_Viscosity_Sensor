@@ -14,8 +14,8 @@
 #ifdef _USE_HW_UART
 
 
-#define _USE_UART1
-
+#define _USE_UART1 // USB
+#define _USE_UART2 // UART
 
 
 static bool is_open[UART_MAX_CH];
@@ -69,8 +69,8 @@ bool uartOpen(uint8_t ch, uint32_t baud)
       qbufferCreate(&qbuffer[ch], &rx_buf[0], 256);
 
       __HAL_RCC_DMA1_CLK_ENABLE();
-      HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
-      HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+      //HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+      //HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
 
       if (HAL_UART_Init(&huart1) != HAL_OK)
@@ -87,7 +87,7 @@ bool uartOpen(uint8_t ch, uint32_t baud)
           ret = false;
         }
 
-        qbuffer[ch].in  = qbuffer[ch].len - hdma_usart1_rx.Instance->CNDTR;
+        qbuffer[ch].in  = qbuffer[ch].len - hdma_usart1_rx.Instance->NDTR;
         qbuffer[ch].out = qbuffer[ch].in;
       }
       #endif
@@ -109,7 +109,7 @@ uint32_t uartAvailable(uint8_t ch)
 
     case _DEF_UART2:
       #ifdef _USE_UART2
-      qbuffer[ch].in = (qbuffer[ch].len - hdma_usart1_rx.Instance->CNDTR);
+      qbuffer[ch].in = (qbuffer[ch].len - hdma_usart1_rx.Instance->NDTR);
       ret = qbufferAvailable(&qbuffer[ch]);
       #endif
       break;
@@ -141,9 +141,9 @@ uint8_t uartRead(uint8_t ch)
 uint32_t uartWrite(uint8_t ch, uint8_t *p_data, uint32_t length)
 {
   uint32_t ret = 0;
-  //HAL_StatusTypeDef status;
-
-
+#ifdef _USE_UART2
+  HAL_StatusTypeDef status;
+#endif
   switch(ch)
   {
     case _DEF_UART1:
@@ -245,19 +245,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     PA9     ------> USART1_TX
     PA10     ------> USART1_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_9;
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_10;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     /* USART1 DMA Init */
     /* USART1_RX Init */
-    hdma_usart1_rx.Instance = DMA1_Channel5;
+    hdma_usart1_rx.Instance = DMA2_Stream2;
+    hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
     hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
@@ -265,6 +263,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_usart1_rx.Init.Mode = DMA_CIRCULAR;
     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_usart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
     {
       Error_Handler();
@@ -272,9 +271,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart1_rx);
 
-    /* USART1 interrupt Init */
-    HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
   /* USER CODE END USART1_MspInit 1 */
@@ -300,14 +296,14 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
     /* USART1 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmarx);
-
-    /* USART1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspDeInit 1 */
 
   /* USER CODE END USART1_MspDeInit 1 */
   }
 }
+
+
+
 #endif
 
 #endif
