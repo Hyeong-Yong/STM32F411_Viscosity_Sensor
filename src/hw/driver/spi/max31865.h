@@ -30,6 +30,7 @@
  Low  Fault Threshold LSB	|			06h				|			86h
  Fault Status				|			07h				|
 */
+#define MAX31865_CONFIG_REG              0x00
 #define MAX31865_CONFIG_READ             0x00
 #define MAX31865_RTDMSB_READ             0x01
 #define MAX31865_RTDLSB_READ  			 0x02

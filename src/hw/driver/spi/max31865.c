@@ -20,9 +20,11 @@ static void cli_max31865(cli_args_t* args);
 #define _SPI_CH	_DEF_SPI1
 #define _GPIO_MAX31865_CS _DEF_GPIO2
 
-static uint8_t* max31865_readRegisterN(uint8_t addr, uint8_t n);
+
+static void max31865_readRegisterN(uint8_t addr, uint8_t* buffer, uint8_t n);
 static uint8_t  max31865_readRegister8(uint8_t addr);
 static uint16_t max31865_readRegister16(uint8_t addr);
+
 static uint8_t  max31865_readFault();
 static void max31865_clearFault();
 static void max31865_enableBias(uint8_t enable);
@@ -51,17 +53,21 @@ void max31865_init() //uint8_t  numwires, uint8_t filterHz
   pt100.lock = 1;
 
 // CS핀 OFF
-  gpioPinWrite(_SPI_CH, _DEF_LOW);
+  gpioPinWrite(_GPIO_MAX31865_CS, _DEF_LOW);
 
 // 딜레이
   delay(100);
 
 // Setting configuration
   max31865_setWires(MAX31865_CONFIG_3WIRE);
-  max31865_enableBias(MAX31865_CONFIG_BIAS);
-  max31865_autoConvert(MAX31865_CONFIG_AUTO);
+  uint8_t conf1 = max31865_readRegister8(MAX31865_CONFIG_READ);
+  max31865_enableBias(1);
+ uint8_t conf2 = max31865_readRegister8(MAX31865_CONFIG_READ);
+  max31865_autoConvert(0);
+  uint8_t conf3 = max31865_readRegister8(MAX31865_CONFIG_READ);
   max31865_clearFault();
   max31865_setFilter(MAX31865_CONFIG_FILT60HZ);
+  uint8_t conf4 = max31865_readRegister8(MAX31865_CONFIG_READ);
 
 #ifdef _USE_HW_CLI
   cliAdd("max31865", cli_max31865);
@@ -71,54 +77,52 @@ void max31865_init() //uint8_t  numwires, uint8_t filterHz
 }
 
 
-uint8_t* max31865_readRegisterN(uint8_t addr, uint8_t n)
+void max31865_readRegisterN(uint8_t addr, uint8_t* buffer, uint8_t n)
 {
 	uint8_t dummy = 0xFF;
 	addr &= 0x7F; ////[A7]=0 (0111 1111) : read
 
-	uint8_t *ret_buf ={0};
-	uint8_t i=0;
 
-	gpioPinWrite(_GPIO_MAX31865_CS, _DEF_HIGH);
+	gpioPinWrite(_GPIO_MAX31865_CS,  _DEF_HIGH);
 	spiTx(_SPI_CH, &addr, 1);
 
 	while (n--)
 	{
-		ret_buf[i] = spiTransfer8(_SPI_CH, dummy);
-		i++;
+        HAL_SPI_TransmitReceive(pt100.spi, &dummy, buffer, 1, 100);
+		buffer++;
 	}
-	gpioPinWrite(_GPIO_MAX31865_CS, _DEF_HIGH);
+	gpioPinWrite(_GPIO_MAX31865_CS, _DEF_LOW);
 
-	return ret_buf;
 }
 
 uint8_t max31865_readRegister8(uint8_t addr)
 {
-	uint8_t* ret_buf;
-	ret_buf = max31865_readRegisterN(addr, 1);
+	uint8_t ret=0;
+	max31865_readRegisterN(addr, &ret, 1);
 
-	uint8_t ret= ret_buf[0];
 	return ret;
 }
 
+
 uint16_t max31865_readRegister16(uint8_t addr)
 {
-	uint8_t *ret_buf;
-	ret_buf = max31865_readRegisterN(addr, 2);
+	uint8_t buffer[2]={0,0};
 
-	uint16_t ret = ret_buf[0];
+	max31865_readRegisterN(addr, buffer, 2);
+
+	uint16_t ret = buffer[0];
 	ret <<= 8;
-	ret |=  ret_buf[1];
+	ret |=  buffer[1];
 	return ret;
 }
 
 void max31865_writeRegister8(uint8_t addr, uint8_t data)
 {
-	gpioPinWrite(_SPI_CH, _DEF_HIGH);
+	gpioPinWrite(_GPIO_MAX31865_CS, _DEF_HIGH);
 	addr |= 0x80; //[A7]=1 (1000 0000) : write
 	spiTx(_SPI_CH, &addr, 1);
 	spiTx(_SPI_CH, &data, 1);
-	gpioPinWrite(_SPI_CH, _DEF_LOW);
+	gpioPinWrite(_GPIO_MAX31865_CS, _DEF_LOW);
 }
 
 uint8_t max31865_readFault()
@@ -131,7 +135,8 @@ void max31865_clearFault()
 	uint8_t t = max31865_readRegister8(MAX31865_CONFIG_READ);
 	t &= ~0x2C;
 	t |= MAX31865_CONFIG_FAULTSTAT;
-	max31865_writeRegister8(MAX31865_CONFIG_READ, t);
+	t = 0x2;
+	max31865_writeRegister8(MAX31865_CONFIG_REG, t);
 }
 
 void max31865_enableBias(uint8_t enable)
@@ -141,17 +146,17 @@ void max31865_enableBias(uint8_t enable)
 		t |= MAX31865_CONFIG_BIAS;
 	else
 		t &= ~MAX31865_CONFIG_BIAS;
-	max31865_writeRegister8(MAX31865_CONFIG_READ, t);
+	max31865_writeRegister8(MAX31865_CONFIG_REG, t);
 }
 
 void max31865_autoConvert(uint8_t enable)
 {
 	uint8_t t = max31865_readRegister8(MAX31865_CONFIG_READ);
-	if (MAX31865_CONFIG_AUTO)
+	if (enable)
 		t |= MAX31865_CONFIG_AUTO;
 	else
 		t &= ~MAX31865_CONFIG_AUTO;
-	max31865_writeRegister8(MAX31865_CONFIG_READ, t);
+	max31865_writeRegister8(MAX31865_CONFIG_REG, t);
 }
 
 void max31865_setWires(uint8_t numWires)
@@ -161,7 +166,7 @@ void max31865_setWires(uint8_t numWires)
 		t |= MAX31865_CONFIG_3WIRE;
 	else
 		t &= ~MAX31865_CONFIG_3WIRE;
-	max31865_writeRegister8(MAX31865_CONFIG_READ, t);
+	max31865_writeRegister8(MAX31865_CONFIG_REG, t);
 }
 
 void max31865_setFilter(uint8_t filterHz)
@@ -171,7 +176,7 @@ void max31865_setFilter(uint8_t filterHz)
 		t |= MAX31865_CONFIG_FILT50HZ;
 	else
 		t &= ~MAX31865_CONFIG_FILT50HZ;
-	max31865_writeRegister8(MAX31865_CONFIG_READ, t);
+	max31865_writeRegister8(MAX31865_CONFIG_REG, t);
 }
 
 uint16_t max31865_readRTD()
@@ -181,8 +186,10 @@ uint16_t max31865_readRTD()
 	delay(10);
 	uint8_t t = max31865_readRegister8(MAX31865_CONFIG_READ);
 	t |= MAX31865_CONFIG_1SHOT;
-	max31865_writeRegister8(MAX31865_CONFIG_READ, t);
+	max31865_writeRegister8(MAX31865_CONFIG_REG, t);
 	delay(65);
+//
+
 	uint16_t rtd = max31865_readRegister16(MAX31865_RTDMSB_READ);
 	rtd >>= 1;
 	return rtd;

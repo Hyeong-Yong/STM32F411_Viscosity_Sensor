@@ -26,9 +26,8 @@ typedef struct
 const gpio_tbl_t gpio_tbl[GPIO_MAX_CH] =
     {
         {GPIOB, GPIO_PIN_9, _DEF_INPUT_PULLUP, GPIO_PIN_RESET, GPIO_PIN_SET, true}, // 0. SD CD
-		{GPIOB, GPIO_PIN_0, _DEF_OUTPUT,	   GPIO_PIN_RESET, GPIO_PIN_SET,   _DEF_LOW},   // 1. MAX31865 CS
+		{GPIOB, GPIO_PIN_0, _DEF_OUTPUT,	   GPIO_PIN_RESET, GPIO_PIN_SET, _DEF_HIGH},   // 1. MAX31865 CS
     };
-
 
 
 #ifdef _USE_HW_CLI

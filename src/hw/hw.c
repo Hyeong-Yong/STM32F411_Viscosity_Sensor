@@ -20,7 +20,7 @@ void hwInit(void)
 
   i2cInit();
   mcp4725_init();
-  INA219_Init();
+  //INA219_Init();
 
   spiInit();
   max31865_init();
